@@ -64,7 +64,19 @@ class CELDAO(BaseDAO):
     def find_all(self, params):
         with self.new_session() as session:
             query = session.query(CELSchema)
-            query = query.order_by(CELSchema.id.asc())
+
+            order_field = params.get('order', 'id')
+            direction = params.get('direction', 'asc')
+
+            if order_field == 'end' or not hasattr(CELSchema, order_field):
+                order_field = 'id'  # Default to 'id' if unsupported or invalid field
+
+            column = getattr(CELSchema, order_field)
+            if direction == 'desc':
+                query = query.order_by(column.desc())
+            else:
+                query = query.order_by(column.asc())
+
             if params.get('after_id'):
                 query = query.filter(CELSchema.id > params['after_id'])
             if params.get('linkedid'):

@@ -7,8 +7,7 @@ from marshmallow import (
     fields,
     Schema,
 )
-from marshmallow.validate import Length, Range
-
+from marshmallow.validate import Length, Range, OneOf
 
 class CELListRequestSchema(Schema):
     class Meta:
@@ -19,6 +18,8 @@ class CELListRequestSchema(Schema):
     linkedid = fields.String(validate=Length(min=1))
     uniqueid = fields.String(validate=Length(min=1))
     call_log_id = fields.String(validate=Length(min=1))
+    order = fields.String(validate=Length(min=1))
+    direction = fields.String(validate=OneOf(["asc", "desc"]))
 
 
 class CELSchema(Schema):
